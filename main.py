@@ -1,6 +1,18 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI(title="API de métricas de campanhas")
+
+class Campanha(BaseModel):
+    nome: str
+    data: str
+    gasto: float
+    impressoes: int
+    cliques: int
+    conversoes: int
+    receita: float
+
+campanhas: list[Campanha] = []
 
 @app.get("/")
 def raiz():
@@ -26,3 +38,13 @@ def calcular(gasto: float, impressoes: int, cliques: int, conversoes: int, recei
         "roas": round(receita / gasto, 2),
         "taxa_conversao": round(conversoes / cliques * 100, 2),
     }
+
+
+@app.post("/campanhas")
+def registrar_campanha(campanha: Campanha):
+    campanhas.append(campanha)
+    return {"mensagem": "campanha registrada", "total": len(campanhas)}
+
+@app.get("/campanhas")
+def listar_campanhas():
+    return campanhas
