@@ -14,3 +14,15 @@ def exemplo():
         "roas": round(receita / gasto, 2),
         "taxa_conversao": round(conversoes / cliques * 100, 2),
     }
+
+@app.get("/metricas/calcular")
+def calcular(gasto: float, impressoes: int, cliques: int, conversoes: int, receita: float):
+    if impressoes == 0 or cliques == 0 or conversoes == 0 or gasto == 0:
+        return {"erro": "impressoes, cliques, conversoes e gasto precisam ser maiores que zero"}
+    return {
+        "ctr": round(cliques / impressoes * 100, 2),
+        "cpc": round(gasto / cliques, 2),
+        "cpa": round(gasto / conversoes, 2),
+        "roas": round(receita / gasto, 2),
+        "taxa_conversao": round(conversoes / cliques * 100, 2),
+    }
